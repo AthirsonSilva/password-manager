@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+import json
 
 FONT_NAME = "Courier"
 
@@ -60,6 +61,13 @@ def save_password(website, user, password):
         password (str): The user's password
     """
 
+    new_data = {
+        website: {
+            'email': user,
+            'password': password
+        }
+    }
+
     is_ok = messagebox.askokcancel(
         title=website, message=f'These are the details entered:'
         f'\nEmail: {user}'
@@ -67,11 +75,32 @@ def save_password(website, user, password):
         f'\nIs it ok to save?')
 
     if is_ok:
-        with open('projects/password-manager/passwords.txt', 'a') as file:
-            file.write(f'{website} | {user} | {password}\n')
+        try:
+            with open('projects/password-manager/data.json', 'r') as data_file:
+                # Read old data
+                data = json.load(data_file)
 
-            messagebox.showinfo(
-                title='Success', message='Credentials stored')
+            with open('projects/password-manager/data.json', 'w') as data_file:
+                # Saving updated data
+                json.dump(data, data_file, indent=4)
+
+                messagebox.showinfo(
+                    title='Success', message='Credentials stored')
+
+        except FileNotFoundError:
+            with open('projects/password-manager/data.json', 'w') as data_file:
+                json.dump(new_data, data_file, indent=4)
+
+                messagebox.showinfo(
+                    title='Success', message='Credentials stored')
+                
+        else:
+            # Update old datas with new data
+            data.update(new_data)
+
+            with open('projects/password-manager/data.json', 'w') as data_file:
+                # Saving update area
+                json.dump(data, data_file, indent=4)
 
 
 #  UI SETUP #
