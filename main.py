@@ -20,6 +20,59 @@ def generate():
     password = generate_password()
     password_entry.insert(0, password)
 
+#  SEARCH PASSWORD  #
+
+
+def validate_website():
+    '''
+    Website validation
+
+    Receives the website/ host from the user and verifies
+    if the website/ host exists in the database
+    '''
+
+    website = website_entry.get()
+
+    with open('projects/password-manager/data.json', 'r') as data_file:
+        # Read old data
+        database = json.load(data_file)
+
+        for data in database:
+            if data == website:
+                search_password(website)
+                break
+
+            else:
+                print('The website does not exist.')
+                break
+
+
+def search_password(website):
+    '''
+    Password searching
+
+    Receives the website/ host from the user and loops through the database
+    searching for the credentials of that particular website/ host.
+
+    Args:
+        website (str): The website that contains the credentials
+    '''
+
+    user = ''
+    password = ''
+    with open('projects/password-manager/data.json', 'r') as data_file:
+        database = json.load(data_file)
+
+        for data in database:
+            if data == website:
+                credentials = database[website]
+                user = credentials['email']
+                password = credentials['password']
+
+                messagebox.showinfo(title='Credentials',
+                                    message=f'User: {user}\n'
+                                    f'Password: {password}')
+
 
 #  SAVE PASSWORD #
 
@@ -87,13 +140,13 @@ def save_password(website, user, password):
                 messagebox.showinfo(
                     title='Success', message='Credentials stored')
 
-        except FileNotFoundError:
+        except FileNotFoundError or json.JSONDecodeError:
             with open('projects/password-manager/data.json', 'w') as data_file:
                 json.dump(new_data, data_file, indent=4)
 
                 messagebox.showinfo(
                     title='Success', message='Credentials stored')
-                
+
         else:
             # Update old datas with new data
             data.update(new_data)
@@ -115,7 +168,6 @@ background_image = tk.PhotoImage(file='projects/password-manager/logo.png')
 canvas = tk.Canvas(width=200, height=200, highlightthickness=0)
 canvas.grid(column=2, row=0)
 background = canvas.create_image(100, 100, image=background_image)
-# background.grid(column=2, row=0)
 
 # Form
 # Labels
@@ -128,6 +180,7 @@ user_label.grid(column=1, row=2)
 password_label = tk.Label(text='Password: ', font=(FONT_NAME, 12, 'normal'))
 password_label.grid(column=1, row=3)
 
+# Buttons
 generate_password_button = tk.Button(
     text='Generate Password', command=generate, width=16)
 generate_password_button.grid(column=3, row=3)
@@ -135,9 +188,12 @@ generate_password_button.grid(column=3, row=3)
 submit_button = tk.Button(text='Add', command=validate_inputs, width=46)
 submit_button.grid(columnspan=3, column=2, row=4)
 
+search_button = tk.Button(text='Search', command=validate_website, width=16)
+search_button.grid(column=3, row=1)
+
 # Entries
-website_entry = tk.Entry(width=48)
-website_entry.grid(columnspan=2, column=2, row=1)
+website_entry = tk.Entry(width=28)
+website_entry.grid(columnspan=1, column=2, row=1)
 website_entry.focus()
 website_entry.insert(0, 'github')
 
