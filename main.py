@@ -13,7 +13,12 @@ def generate_password():
 
 
 def save_password():
-    pass
+    website = str(website_entry.get())
+    user = str(user_entry.get())
+    password = str(password_entry.get())
+
+    with open('projects/password-manager/passwords.txt', 'a') as file:
+        file.write(f'{website} | {user} | {password}\n')
 
 
 # ---------------------------- UI SETUP ------------------------------- #
@@ -51,12 +56,16 @@ submit_button.grid(columnspan=3, column=2, row=4)
 # Entries
 website_entry = tk.Entry(width=48)
 website_entry.grid(columnspan=2, column=2, row=1)
+website_entry.focus()
+website_entry.insert(0, 'github.com')
 
 user_entry = tk.Entry(width=48)
 user_entry.grid(columnspan=2, column=2, row=2)
+user_entry.insert(0, 'athirsonarceus@gmail.com')
 
 password_entry = tk.Entry(width=28)
 password_entry.grid(columnspan=1, column=2, row=3)
+password_entry.insert(0, 'senhabraba123')
 
 
 window.mainloop()
