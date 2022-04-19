@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import messagebox
-import generator
 
 FONT_NAME = "Courier"
 
@@ -8,7 +7,16 @@ FONT_NAME = "Courier"
 
 
 def generate():
-    password = generator.generate_password()
+    """
+    Generates a random password
+
+    Imports a function from another file and generates a random password
+    with random letters, numbers and symbols and inserts into password field
+    """
+
+    from generator import generate_password
+
+    password = generate_password()
     password_entry.insert(0, password)
 
 
@@ -40,17 +48,16 @@ def validate_inputs():
 
 def save_password(website, user, password):
     """
-    Save the password
+    Saves the user data
 
     Request confirmation from the user and, if confirmation is given,
     saves the data from the user in a .txt file
 
-    :param website: The website that the user wants to save his credentials
-    :type website: str
-    :param user: The user's username/ email
-    :type user: str
-    :param password: The user's password
-    :type password: str
+
+    Args:
+        website (str): The website that the user wants to save his credentials
+        user (str): The user's username/ email
+        password (str): The user's password
     """
 
     is_ok = messagebox.askokcancel(
