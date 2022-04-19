@@ -1,16 +1,18 @@
 import tkinter as tk
 from tkinter import messagebox
+import generator
 
 FONT_NAME = "Courier"
 
-# ---------------------------- PASSWORD GENERATOR ------------------------------- #
+#  PASSWORD GENERATOR #
 
 
-def generate_password():
-    pass
+def generate():
+    password = generator.generate_password()
+    password_entry.insert(0, password)
 
 
-# ---------------------------- SAVE PASSWORD ------------------------------- #
+#  SAVE PASSWORD #
 
 
 def validate_inputs():
@@ -40,7 +42,8 @@ def save_password(website, user, password):
     """
     Save the password
 
-    Request confirmation from the user and, if confirmation is given, saves the data from the user in a .txt file
+    Request confirmation from the user and, if confirmation is given,
+    saves the data from the user in a .txt file
 
     :param website: The website that the user wants to save his credentials
     :type website: str
@@ -51,7 +54,10 @@ def save_password(website, user, password):
     """
 
     is_ok = messagebox.askokcancel(
-        title=website, message=f'These are the details entered: \nEmail: {user} \nPassword: {password} \nIs it ok to save?')
+        title=website, message=f'These are the details entered:'
+        f'\nEmail: {user}'
+        f'\nPassword: {password}'
+        f'\nIs it ok to save?')
 
     if is_ok:
         with open('projects/password-manager/passwords.txt', 'a') as file:
@@ -61,7 +67,7 @@ def save_password(website, user, password):
             user_entry.delete(0, '')
 
 
-# ---------------------------- UI SETUP ------------------------------- #
+#  UI SETUP #
 # Window setup
 window = tk.Tk()
 window.minsize(width=250, height=250)
@@ -87,7 +93,7 @@ password_label = tk.Label(text='Password: ', font=(FONT_NAME, 12, 'normal'))
 password_label.grid(column=1, row=3)
 
 generate_password_button = tk.Button(
-    text='Generate Password', command=generate_password, width=16)
+    text='Generate Password', command=generate, width=16)
 generate_password_button.grid(column=3, row=3)
 
 submit_button = tk.Button(text='Add', command=validate_inputs, width=46)
